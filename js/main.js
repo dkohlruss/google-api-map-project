@@ -1,6 +1,4 @@
-// TODO: Populate infowindow with useful info
-// TODO: Review rubric and see what exactly I need to do before going further
-// TODO: Grab FB & 4Square info for infowindow
+// TODO: Create toggle system to check if infowindow is open, close it & stop animation if opened.
 
 var locations = [
 	{
@@ -76,10 +74,16 @@ function initMap() {
 function ViewModel() {
 	var self = this;
 	infoWindow = new google.maps.InfoWindow();
+	self.searchName = ko.observable('');
+
+	// Lazy way to add a filtered booleon to each object literal in locations array
+	for (var i = 0; i < locations.length; i++) {
+		locations[i].filtered = true;
+	};
 
 	self.sortedlocations = ko.observableArray(locations);
-	console.log('test');
 
+	// Create markers and add infowindow functionality
 	self.sortedlocations().forEach(function(location) {
 		var position = location.latlng;
 		var title = location.name;
@@ -93,12 +97,48 @@ function ViewModel() {
 		location.marker = marker;
 
 		marker.addListener('click', function() {
+			toggleAnimation(location.marker);
 			infoWindow.setContent('<div>' + location.name + '</div>');
 			infoWindow.open(map, location.marker);
 		});
 	});
-}
 
-function populateInfoWindow(location) {
-	return location.marker;
-}
+	// Changes the searchName observable (input into textbox) to lowercase, searches against lowercase names in sortedlocations()
+	// Changes filtered value to false if no match & true if there is a match
+	// Changes results that are filtered out to have a 'null' map
+	self.lowerCaseSearch = ko.computed(function() {
+		query = searchName().toLowerCase();
+		for (var i = 0; i < sortedlocations().length; i++) {
+			var locationname = sortedlocations()[i].name.toLowerCase();
+			// Checks to see if the entered text is visible in any restaurant name in array
+			if (locationname.indexOf(query) === -1) {
+				// Change filtered value to false when no match
+				sortedlocations()[i].filtered = false;
+				sortedlocations()[i].marker.map = null;
+			} else {
+				// Change filtered value to true with a match
+				sortedlocations()[i].filtered = true;
+				sortedlocations()[i].marker.map = map;
+			};
+		};
+	});
+
+	// Handles bouncing animation on opening of infowindow
+	self.toggleAnimation = function(location) {
+		location.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){
+			location.setAnimation(null);
+		}, 1500);
+	};
+
+	// Click handler for sidebar list
+	self.listClick = function(location) {
+		google.maps.event.trigger(location.marker, 'click');
+	};
+
+	// TODO: Put all infoWindow functionality in here
+	self.populateInfoWindow = function(location) {
+		return location.marker;
+	};
+;}
+
