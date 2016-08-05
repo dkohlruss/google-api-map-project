@@ -11,7 +11,7 @@ var locations = [
 		facebook: 'https://www.facebook.com/Blue-Nile-Ethiopian-Restaurant-137520976260894/',
 		foursquare: 'https://foursquare.com/v/blue-nile/4b0586ebf964a520787522e3',
 		latlng: { lat: 51.054907, lng: -114.0859366 },
-		filtered: true
+		filtered: ko.observable(true)
 	},
 	{
 		name: 'Delicious Thai Restaurant',
@@ -23,7 +23,7 @@ var locations = [
 		facebook: 'https://www.facebook.com/Deliciousthaicalgary/?fref=ts',
 		foursquare: 'https://foursquare.com/v/delicious-thai/4bff20fec30a2d7f8b96101d',
 		latlng: { lat: 51.0545118, lng: -114.0855684 },
-		filtered: true
+		filtered: ko.observable(true)
 	},
 	{
 		name: 'Bodega',
@@ -35,7 +35,7 @@ var locations = [
 		faecbook: 'https://www.facebook.com/bodegacalgary/?fref=ts',
 		foursquare: 'https://foursquare.com/v/bodega',
 		latlng: { lat: 51.054815, lng: -114.085526 },
-		filtered: true
+		filtered: ko.observable(true)
 	},
 	{
 		name: 'Midtown Kitchen & Bar',
@@ -47,7 +47,7 @@ var locations = [
 		facebook: 'https://www.facebook.com/MidtownKitchenBar/?fref=ts',
 		foursquare: 'https://foursquare.com/midtownyyc',
 		latlng: { lat: 51.0541687, lng: -114.0857281 },
-		filtered: true
+		filtered: ko.observable(true)
 	},
 	{
 		name: 'Shawarma Station',
@@ -59,7 +59,7 @@ var locations = [
 		facebook: 'https://www.facebook.com/Shawarma-Station-657998680915701/?fref=ts',
 		foursquare: 'https://foursquare.com/v/shawarma-station/4b0586ecf964a520b57522e3',
 		latlng: { lat: 51.0537143, lng: -114.0863066 },
-		filtered: true
+		filtered: ko.observable(true)
 	}
 ];
 
@@ -121,11 +121,11 @@ function ViewModel() {
 			// Checks to see if the entered text is visible in any restaurant name in array
 			if (locationname.indexOf(query) === -1) {
 				// Change filtered value to false when no match
-				sortedlocations()[i].filtered = false;
+				sortedlocations()[i].filtered(false);
 				sortedlocations()[i].marker.setVisible(false);
 			} else {
 				// Change filtered value to true with a match
-				sortedlocations()[i].filtered = true;
+				sortedlocations()[i].filtered(true);
 				sortedlocations()[i].marker.setVisible(true);
 			};
 		};
@@ -148,5 +148,9 @@ function ViewModel() {
 	self.populateInfoWindow = function(location) {
 		return location.marker;
 	};
+
+	self.mapError = function() {
+		alert("It borked -- Make error good later ok and do good when making good.");
+	}
 ;}
 
