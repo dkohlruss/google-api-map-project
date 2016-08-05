@@ -10,7 +10,8 @@ var locations = [
 		website: 'http://www.blue-nile-calgary.com',
 		facebook: 'https://www.facebook.com/Blue-Nile-Ethiopian-Restaurant-137520976260894/',
 		foursquare: 'https://foursquare.com/v/blue-nile/4b0586ebf964a520787522e3',
-		latlng: { lat: 51.054907, lng: -114.0859366 }
+		latlng: { lat: 51.054907, lng: -114.0859366 },
+		filtered: true
 	},
 	{
 		name: 'Delicious Thai Restaurant',
@@ -21,7 +22,8 @@ var locations = [
 		website: 'http://www.delicious-thai.com',
 		facebook: 'https://www.facebook.com/Deliciousthaicalgary/?fref=ts',
 		foursquare: 'https://foursquare.com/v/delicious-thai/4bff20fec30a2d7f8b96101d',
-		latlng: { lat: 51.0545118, lng: -114.0855684 }
+		latlng: { lat: 51.0545118, lng: -114.0855684 },
+		filtered: true
 	},
 	{
 		name: 'Bodega',
@@ -32,7 +34,8 @@ var locations = [
 		website: 'http://www.labodega.ca',
 		faecbook: 'https://www.facebook.com/bodegacalgary/?fref=ts',
 		foursquare: 'https://foursquare.com/v/bodega',
-		latlng: { lat: 51.054815, lng: -114.085526 }
+		latlng: { lat: 51.054815, lng: -114.085526 },
+		filtered: true
 	},
 	{
 		name: 'Midtown Kitchen & Bar',
@@ -43,7 +46,8 @@ var locations = [
 		website: 'http://www.midtownkitchen.ca',
 		facebook: 'https://www.facebook.com/MidtownKitchenBar/?fref=ts',
 		foursquare: 'https://foursquare.com/midtownyyc',
-		latlng: { lat: 51.0541687, lng: -114.0857281 }
+		latlng: { lat: 51.0541687, lng: -114.0857281 },
+		filtered: true
 	},
 	{
 		name: 'Shawarma Station',
@@ -54,7 +58,8 @@ var locations = [
 		website: 'http://www.shawarmastationcalgary.com',
 		facebook: 'https://www.facebook.com/Shawarma-Station-657998680915701/?fref=ts',
 		foursquare: 'https://foursquare.com/v/shawarma-station/4b0586ecf964a520b57522e3',
-		latlng: { lat: 51.0537143, lng: -114.0863066 }
+		latlng: { lat: 51.0537143, lng: -114.0863066 },
+		filtered: true
 	}
 ];
 
@@ -74,12 +79,13 @@ function initMap() {
 function ViewModel() {
 	var self = this;
 	infoWindow = new google.maps.InfoWindow();
-	self.searchName = ko.observable('');
 
-	// Lazy way to add a filtered booleon to each object literal in locations array
-	for (var i = 0; i < locations.length; i++) {
-		locations[i].filtered = true;
-	};
+
+	// Lazy way to add a filtered booleon to each object literal in locations array for easy removal later if
+	// it's a bad way to implement filtering
+	//for (var i = 0; i < locations.length; i++) {
+	//	locations[i].filtered = true;
+	//};
 
 	self.sortedlocations = ko.observableArray(locations);
 
@@ -103,22 +109,24 @@ function ViewModel() {
 		});
 	});
 
+	self.searchName = ko.observable('');
+
 	// Changes the searchName observable (input into textbox) to lowercase, searches against lowercase names in sortedlocations()
 	// Changes filtered value to false if no match & true if there is a match
-	// Changes results that are filtered out to have a 'null' map
+	// Changes results that are filtered out to have a 'null' map.
 	self.lowerCaseSearch = ko.computed(function() {
-		query = searchName().toLowerCase();
+		var query = searchName().toLowerCase();
 		for (var i = 0; i < sortedlocations().length; i++) {
 			var locationname = sortedlocations()[i].name.toLowerCase();
 			// Checks to see if the entered text is visible in any restaurant name in array
 			if (locationname.indexOf(query) === -1) {
 				// Change filtered value to false when no match
 				sortedlocations()[i].filtered = false;
-				sortedlocations()[i].marker.map = null;
+				sortedlocations()[i].marker.setVisible(false);
 			} else {
 				// Change filtered value to true with a match
 				sortedlocations()[i].filtered = true;
-				sortedlocations()[i].marker.map = map;
+				sortedlocations()[i].marker.setVisible(true);
 			};
 		};
 	});
