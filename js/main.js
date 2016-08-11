@@ -63,6 +63,29 @@ var locations = [
 	}
 ];
 
+// Code exerpt from https://www.thepolyglotdeveloper.com/2015/03/create-a-random-nonce-string-using-javascript/
+var randstring = function() {
+	var length = 10;
+	var possvble = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+	var text;
+	for (var i = 0; i < length; i++) {
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+	};
+
+	return text;
+}
+
+var yelp = {
+	oauth_consumer_key: 'Xy_-i8Qhfgn82jMEtAfA_g', // Yelp API generated consumer key
+	oauth_token: 'yUbAQCbMoVO66Mb7M7Pyp-vMnXld3m7c', // Yelp API generated token
+	oauth_signature_method: 'hmac-sha1', // oauth signature method
+	oauth_signature: 'Lv8-JKYNrTEFNhU27saJz7Kbx3E', // Yelp API generated token secret
+	oauth_timestamp: Date.UTC() * 1000, // Number of seconds since January 1, 1970 00:00:00 GMT
+	oauth_nonce: randstring // A random string, uniquely generated for each request.
+};
+// TODO: Create AJAX request within ViewModel using Phone number search to pull up specific locations,
+// and append relevant info (stars, link to yelp page, exerpt from recent review) to Infowindow
+
 var map;
 var markers;
 var infoWindow;
@@ -74,20 +97,16 @@ function initMap() {
 	});
 
 	ko.applyBindings(ViewModel());
-}
+};
 
 function ViewModel() {
 	var self = this;
 	infoWindow = new google.maps.InfoWindow();
 
 
-	// Lazy way to add a filtered booleon to each object literal in locations array for easy removal later if
-	// it's a bad way to implement filtering
-	//for (var i = 0; i < locations.length; i++) {
-	//	locations[i].filtered = true;
-	//};
-
 	self.sortedlocations = ko.observableArray(locations);
+
+	// AJAX request
 
 	// Create markers and add infowindow functionality
 	self.sortedlocations().forEach(function(location) {
@@ -148,9 +167,8 @@ function ViewModel() {
 	self.populateInfoWindow = function(location) {
 		return location.marker;
 	};
+};
 
-	self.mapError = function() {
-		alert("It borked -- Make error good later ok and do good when making good.");
-	}
-;}
-
+function mapError() {
+	document.getElementById('map').innerHTML = "<p>We're sorry, the map could not be loaded at this time.</p>";
+}
