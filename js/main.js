@@ -93,18 +93,22 @@ function ViewModel() {
     	return text;
 	};
 
-	var yelp = {
+	var parameters = {
 		oauth_consumer_key: 'Xy_-i8Qhfgn82jMEtAfA_g', // Yelp API generated consumer key
 		oauth_token: 'JG74BPBt9bldwbmByB9QE2ueGYVGny7A', // Yelp API generated token
 		oauth_signature_method: 'HMAC-SHA1', // oauth signature method
-		oauth_signature: '4wZwbaJlyls7bQjxgDD5UT8ybYw	', // Yelp API generated token secret
 		oauth_timestamp: Math.floor(Date.now() / 1000), // Number of seconds since January 1, 1970 00:00:00 GMT
-		oauth_nonce: randomString() // A random string, uniquely generated for each request.
+		oauth_nonce: randomString(), // A random string, uniquely generated for each request.
+		limit: 1,
+		callback: 'cb'
 	};
+
+	var encodedSignature = OAuthSignature.generate('GET', yelpURL, parameters, 'wrJfUZKAqSavqVHXsWm1jRpWEME', '4wZwbaJlyls7bQjxgDD5UT8ybYw')
+	yelp.oauth_signature = encodedSignature;
 
 
 	// Problem here -- Signature seems to need to be encoded somehow but am unsure how to do so
-	var yelpURL = 'https://api.yelp.com/v2/phone_search/?phone=4032704550&oauth_consumer_key=' + yelp.oauth_consumer_key + '&oauth_nonce=' + yelp.oauth_nonce + '&oauth_signature=' + yelp.oauth_signature + '&oauth_signature_method=' +  yelp.oauth_signature_method + '&oauth_timestamp=' + yelp.oauth_timestamp + '&oauth_token=' + yelp.oauth_token;
+	var yelpURL = 'https://api.yelp.com/v2/phone_search/?phone=(403) 474-2555';
 
 	// AJAX request
 	$.ajax({
