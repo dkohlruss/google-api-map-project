@@ -103,10 +103,8 @@ function ViewModel() {
 	};
 
 
-	//
+	// Problem here -- Signature seems to need to be encoded somehow but am unsure how to do so
 	var yelpURL = 'https://api.yelp.com/v2/phone_search/?phone=4032704550&oauth_consumer_key=' + yelp.oauth_consumer_key + '&oauth_nonce=' + yelp.oauth_nonce + '&oauth_signature=' + yelp.oauth_signature + '&oauth_signature_method=' +  yelp.oauth_signature_method + '&oauth_timestamp=' + yelp.oauth_timestamp + '&oauth_token=' + yelp.oauth_token;
-
-	self.sortedlocations = ko.observableArray(locations);
 
 	// AJAX request
 	$.ajax({
@@ -122,6 +120,8 @@ function ViewModel() {
 			console.log("FAILED! -- " + data);
 		}
 	});
+
+	self.sortedlocations = ko.observableArray(locations);
 
 	// Create markers and add infowindow functionality
 	self.sortedlocations().forEach(function(location) {
