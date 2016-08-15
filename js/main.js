@@ -105,6 +105,7 @@ function ViewModel() {
 		location: 'Calgary'
 	};
 
+	// Using format oauthSignature.generate(method, URL, parameters, CONSUMER_SECRET, TOKEN_SECRET)
 	var encodedSignature = oauthSignature.generate('GET', yelpURL, parameters, 'wrJfUZKAqSavqVHXsWm1jRpWEME', '4wZwbaJlyls7bQjxgDD5UT8ybYw');
 	parameters.oauth_signature = encodedSignature;
 
