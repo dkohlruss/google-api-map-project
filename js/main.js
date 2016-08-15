@@ -71,7 +71,7 @@ var infoWindow;
 function initMap() {
    	map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 51.0545169, lng: -114.0867707 },
-		zoom: 16
+		zoom: 17
 	});
 
 	ko.applyBindings(ViewModel());
@@ -177,11 +177,11 @@ function ViewModel() {
 			dataType: 'jsonp',
 			jsonpCallback: 'cb',
 			success: function(data) {
-				infoWindow.setContent('<div><a href="' + location.website + '"">' + location.name + '</a><br/>' + location.phone + ' -- ' + location.address + ', ' + location.city + '</div> <div><a href="' + data.businesses[0].url + '"><img src="' + data.businesses[0].rating_img_url + '"><img src="https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/5cb298e8a186/assets/img/yelp-logo-xsmall@2x.png"></a></div><div>' + data.businesses[0].snippet_text + '</div>');
+				infoWindow.setContent('<div><a href="' + location.website + '"">' + location.name + '</a><br/>' + location.phone + '<br/>' + location.address + ', ' + location.city + '</div> <div><a href="' + data.businesses[0].url + '"><img src="' + data.businesses[0].rating_img_url + '"><img src="https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/5cb298e8a186/assets/img/yelp-logo-xsmall@2x.png"></a></div><div>' + data.businesses[0].snippet_text + '</div>');
 				infoWindow.open(map, location.marker);
 			},
 			error: function(data) {
-				infoWindow.setContent('<div><a href="' + location.website + '"">' + location.name + '</a><br/>' + location.phone + ' -- ' + location.address + ', ' + location.city + '</div><div>Yelp info could not be accessed at this time, please try again later</div>');
+				infoWindow.setContent('<div><a href="' + location.website + '"">' + location.name + '</a><br/>' + location.phone + '<br/>' + location.address + ', ' + location.city + '</div><div>Yelp info could not be accessed at this time, please try again later</div>');
 				infoWindow.open(map, location.marker);
 			}
 		});
