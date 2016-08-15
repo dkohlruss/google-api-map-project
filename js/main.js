@@ -138,8 +138,7 @@ function ViewModel() {
 
 	// TODO: Put all infoWindow functionality in here
 	self.populateInfoWindow = function(location) {
-			// Code exerpt from https://www.thepolyglotdeveloper.com/2015/03/create-a-random-nonce-string-using-javascript/
-		// TODO: Place Yelp-related stuff into its own function for organization & ease of implementation later
+		// Code exerpt from https://www.thepolyglotdeveloper.com/2015/03/create-a-random-nonce-string-using-javascript/
 		var randomString = function() {
 			var length = 10;
     		var text = "";
@@ -169,7 +168,6 @@ function ViewModel() {
 		// Using format oauthSignature.generate(method, URL, parameters, CONSUMER_SECRET, TOKEN_SECRET)
 		var encodedSignature = oauthSignature.generate('GET', yelpURL, parameters, consumerSecret, tokenSecret);
 		parameters.oauth_signature = encodedSignature;
-
 
 		// AJAX request
 		$.ajax({

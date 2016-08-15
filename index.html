@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      html,
-      body {
-        font-family: Arial, sans-serif;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    #map {
-        height: 50%;
-      }
-    </style>
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <!--  TODO: Asyncrhonously load KO -->
+    <script type="text/javascript" src="js/knockout-3.3.0.js"></script>
   </head>
   <body>
-    <div id="map"></div>
-    <div id="sidebar">
-      <input type="text" data-bind="textInput: searchName"></input>
-      <ul data-bind="foreach: sortedlocations">
-        <li data-bind="click: listClick, visible: filtered, text: name"></li>
-      </ul>
+    <div class="container-fluid">
+      <div class="col-md-12">
+        <h2>Restaurants in Kensington</h2>
+      </div>
+      <div class="row">
+        <div class="col-md-3 list-group" id="sidebar">
+          <input type="text" data-bind="textInput: searchName" placeholder="Filter Restaurants"></input>
+          <ul data-bind="foreach: sortedlocations">
+              <li data-bind="click: listClick, visible: filtered, text: name"></li>
+          </ul>
+        </div>
+        <div class="map-container col-md-9">
+          <div id="map"><!--Map Generated Here --></div>
+        </div>
+      </row>
     </div>
 
 
+    <script type="text/javascript" async src="js/oauth-1.0a.js"></script>
+    <script type="text/javascript" async src="js/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" async src="js/main.js"></script>
-    <script type="text/javascript" src="js/oauth-1.0a.js"></script>
-    <script type="text/javascript" src="js/knockout-3.3.0.js"></script>
-    <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" async src="js/bootstrap.min.js"></script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7Q5FQh1EH6qDJ0a5FQUDj5pYMuhRJh7o&v=3&callback=initMap" onError="mapError()">
     </script>
