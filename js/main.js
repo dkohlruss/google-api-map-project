@@ -100,25 +100,26 @@ function ViewModel() {
 		oauth_timestamp: Math.floor(Date.now() / 1000), // Number of seconds since January 1, 1970 00:00:00 GMT
 		oauth_nonce: randomString(), // A random string, uniquely generated for each request.
 		limit: 1,
-		callback: 'cb'
+		callback: 'cb',
+		term: 'Donairs',
+		location: 'Calgary'
 	};
 
-	var encodedSignature = OAuthSignature.generate('GET', yelpURL, parameters, 'wrJfUZKAqSavqVHXsWm1jRpWEME', '4wZwbaJlyls7bQjxgDD5UT8ybYw')
-	yelp.oauth_signature = encodedSignature;
-
+	var encodedSignature = oauthSignature.generate('GET', yelpURL, parameters, 'wrJfUZKAqSavqVHXsWm1jRpWEME', '4wZwbaJlyls7bQjxgDD5UT8ybYw');
+	parameters.oauth_signature = encodedSignature;
 
 	// Problem here -- Signature seems to need to be encoded somehow but am unsure how to do so
-	var yelpURL = 'https://api.yelp.com/v2/phone_search/?phone=(403) 474-2555';
+	var yelpURL = 'http://api.yelp.com/v2/search';
 
 	// AJAX request
 	$.ajax({
 		url: yelpURL,
-		data: yelp,
+		data: parameters,
 		cache: true,
 		dataType: 'jsonp',
 		jsonpCallback: 'cb',
 		success: function(data) {
-			console.log(data.businesses[0]);
+			console.log("Success!  Now put some stuff in");
 		},
 		error: function(data) {
 			console.log("FAILED! -- " + data);
