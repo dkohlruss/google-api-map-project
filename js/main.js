@@ -105,12 +105,14 @@ function ViewModel() {
 		location: 'Calgary'
 	};
 
+	var consumerSecret = 'wrJfUZKAqSavqVHXsWm1jRpWEME';
+	var tokenSecret = '4wZwbaJlyls7bQjxgDD5UT8ybYw';
+		var yelpURL = 'http://api.yelp.com/v2/search';
 	// Using format oauthSignature.generate(method, URL, parameters, CONSUMER_SECRET, TOKEN_SECRET)
-	var encodedSignature = oauthSignature.generate('GET', yelpURL, parameters, 'wrJfUZKAqSavqVHXsWm1jRpWEME', '4wZwbaJlyls7bQjxgDD5UT8ybYw');
+	var encodedSignature = oauthSignature.generate('GET', yelpURL, parameters, consumerSecret, tokenSecret);
 	parameters.oauth_signature = encodedSignature;
 
-	// Problem here -- Signature seems to need to be encoded somehow but am unsure how to do so
-	var yelpURL = 'http://api.yelp.com/v2/search';
+
 
 	// AJAX request
 	$.ajax({
@@ -120,7 +122,7 @@ function ViewModel() {
 		dataType: 'jsonp',
 		jsonpCallback: 'cb',
 		success: function(data) {
-			console.log("Success!  Now put some stuff in");
+			console.log(data.businesses[0].rating_img_url);
 		},
 		error: function(data) {
 			console.log("FAILED! -- " + data);
