@@ -1,5 +1,4 @@
-// TODO: Create toggle system to check if infowindow is open, close it & stop animation if opened.
-
+// Declaration of Restaurants
 var locations = [
 	{
 		name: 'Blue Nile Ethiopian Restaurant',
@@ -9,7 +8,6 @@ var locations = [
 		city: 'Calgary, AB, T2N 1V8',
 		website: 'http://www.blue-nile-calgary.com',
 		facebook: 'https://www.facebook.com/Blue-Nile-Ethiopian-Restaurant-137520976260894/',
-		foursquare: 'https://foursquare.com/v/blue-nile/4b0586ebf964a520787522e3',
 		latlng: { lat: 51.054907, lng: -114.0859366 },
 		filtered: ko.observable(true)
 	},
@@ -21,7 +19,6 @@ var locations = [
 		city: 'Calgary, AB, T2N 1V8',
 		website: 'http://www.delicious-thai.com',
 		facebook: 'https://www.facebook.com/Deliciousthaicalgary/?fref=ts',
-		foursquare: 'https://foursquare.com/v/delicious-thai/4bff20fec30a2d7f8b96101d',
 		latlng: { lat: 51.0545118, lng: -114.0855684 },
 		filtered: ko.observable(true)
 	},
@@ -33,7 +30,6 @@ var locations = [
 		city: 'Calgary, AB, T2N 1V8',
 		website: 'http://www.labodega.ca',
 		faecbook: 'https://www.facebook.com/bodegacalgary/?fref=ts',
-		foursquare: 'https://foursquare.com/v/bodega',
 		latlng: { lat: 51.054815, lng: -114.085526 },
 		filtered: ko.observable(true)
 	},
@@ -45,7 +41,6 @@ var locations = [
 		city: 'Calgary, AB, T2N 1V8',
 		website: 'http://www.midtownkitchen.ca',
 		facebook: 'https://www.facebook.com/MidtownKitchenBar/?fref=ts',
-		foursquare: 'https://foursquare.com/midtownyyc',
 		latlng: { lat: 51.0541687, lng: -114.0857281 },
 		filtered: ko.observable(true)
 	},
@@ -57,17 +52,17 @@ var locations = [
 		city: 'Calgary, AB, T2N 1V8',
 		website: 'http://www.shawarmastationcalgary.com',
 		facebook: 'https://www.facebook.com/Shawarma-Station-657998680915701/?fref=ts',
-		foursquare: 'https://foursquare.com/v/shawarma-station/4b0586ecf964a520b57522e3',
 		latlng: { lat: 51.0537143, lng: -114.0863066 },
 		filtered: ko.observable(true)
 	}
 ];
 
-
+// Global functions
 var map;
 var markers;
 var infoWindow;
 
+// Google Map Initialization
 function initMap() {
    	map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 51.0545169, lng: -114.0860707 },
@@ -75,8 +70,9 @@ function initMap() {
 	});
 
 	ko.applyBindings(ViewModel());
-};
+}
 
+// Knockout ViewModel
 function ViewModel() {
 	var self = this;
 	infoWindow = new google.maps.InfoWindow();
@@ -100,7 +96,6 @@ function ViewModel() {
 			populateInfoWindow(location);
 		});
 	});
-
 	self.searchName = ko.observable('');
 
 	// Changes the searchName observable (input into textbox) to lowercase, searches against lowercase names in sortedlocations()
@@ -131,12 +126,12 @@ function ViewModel() {
 		}, 1500);
 	};
 
-	// Click handler for sidebar list
+	// Click handler for sidebar list -- Treats click of list as a click of the marker
 	self.listClick = function(location) {
 		google.maps.event.trigger(location.marker, 'click');
 	};
 
-	// Expands/Contracts menu on mobile displays/small browswer windows
+	// Expands/Contracts list on mobile displays/small browswer windows
 	self.toggleMenu = function() {
 		if ($('#sidebar').css('display') == 'none') {
 			$('#sidebar').css('display', 'block');
@@ -145,7 +140,7 @@ function ViewModel() {
 		}
 	};
 
-	// TODO: Put all infoWindow functionality in here
+	// Populates infoWindow with info from sortedlocations KO observable and Yelp API
 	self.populateInfoWindow = function(location) {
 		// Code exerpt from https://www.thepolyglotdeveloper.com/2015/03/create-a-random-nonce-string-using-javascript/
 		var randomString = function() {
@@ -158,6 +153,7 @@ function ViewModel() {
     		return text;
 		};
 
+		// Parameters to feed into Yelp AJAX request
 		var parameters = {
 			oauth_consumer_key: 'Xy_-i8Qhfgn82jMEtAfA_g', // Yelp API generated consumer key
 			oauth_token: 'JG74BPBt9bldwbmByB9QE2ueGYVGny7A', // Yelp API generated token
@@ -168,12 +164,16 @@ function ViewModel() {
 			callback: 'cb',
 		};
 
+		// Variables specific to Yelp AJAX Request
+		var consumerSecret = 'wrJfUZKAqSavqVHXsWm1jRpWEME';
+		var tokenSecret = '4wZwbaJlyls7bQjxgDD5UT8ybYw';
+		// Yelp Phone Search URL for AJAX Request
+		var yelpURL = 'http://api.yelp.com/v2/phone_search';
+		// Pulls phone number from sortedlocations KO observable and adds it to parameters supplied to Yelp AJAX request
 		var phone = location.phone;
 		parameters.phone = phone;
 
-		var consumerSecret = 'wrJfUZKAqSavqVHXsWm1jRpWEME';
-		var tokenSecret = '4wZwbaJlyls7bQjxgDD5UT8ybYw';
-		var yelpURL = 'http://api.yelp.com/v2/phone_search';
+
 		// Using format oauthSignature.generate(method, URL, parameters, CONSUMER_SECRET, TOKEN_SECRET)
 		var encodedSignature = oauthSignature.generate('GET', yelpURL, parameters, consumerSecret, tokenSecret);
 		parameters.oauth_signature = encodedSignature;
@@ -185,10 +185,12 @@ function ViewModel() {
 			cache: true,
 			dataType: 'jsonp',
 			jsonpCallback: 'cb',
+			// Displays returned info from Yelp and locally stored info in infowindow
 			success: function(data) {
 				infoWindow.setContent('<div><a href="' + location.website + '"">' + location.name + '</a><br/>' + location.phone + '<br/>' + location.address + ', ' + location.city + '</div> <div><a href="' + data.businesses[0].url + '"><img src="' + data.businesses[0].rating_img_url + '"><img src="https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/5cb298e8a186/assets/img/yelp-logo-xsmall@2x.png"></a></div><div>' + data.businesses[0].snippet_text + '</div>');
 				infoWindow.open(map, location.marker);
 			},
+			// Informs user Yelp AJAX request failed; displays locally stored info only
 			error: function(data) {
 				infoWindow.setContent('<div><a href="' + location.website + '"">' + location.name + '</a><br/>' + location.phone + '<br/>' + location.address + ', ' + location.city + '</div><div>Yelp info could not be accessed at this time, please try again later</div>');
 				infoWindow.open(map, location.marker);
@@ -197,8 +199,17 @@ function ViewModel() {
 
 		return location.marker;
 	};
-};
+}
 
+// onerror function in case of Google Map not loading properly
 function mapError() {
 	document.getElementById('map').innerHTML = "<p>We're sorry, the map could not be loaded at this time.</p>";
 }
+
+/* TODO for future updates after Nanodegree completed:
+	- Add additional restaurant locations
+	- Include FB link in infowindow
+	- Update map zooming and center on infoWindow open/close
+	- Include additional types of filtering (dropdown menu for cuisine, etc)
+	- Animate menu when hamburger button pressed
+*/
