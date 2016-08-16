@@ -70,7 +70,7 @@ var infoWindow;
 
 function initMap() {
    	map = new google.maps.Map(document.getElementById('map'), {
-		center: {lat: 51.0545169, lng: -114.0867707 },
+		center: {lat: 51.0545169, lng: -114.0860707 },
 		zoom: 17
 	});
 
@@ -134,6 +134,15 @@ function ViewModel() {
 	// Click handler for sidebar list
 	self.listClick = function(location) {
 		google.maps.event.trigger(location.marker, 'click');
+	};
+
+	// Expands/Contracts menu on mobile displays/small browswer windows
+	self.toggleMenu = function() {
+		if ($('#sidebar').css('display') == 'none') {
+			$('#sidebar').css('display', 'block');
+		} else {
+			$('#sidebar').css('display', 'none');
+		}
 	};
 
 	// TODO: Put all infoWindow functionality in here

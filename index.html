@@ -12,19 +12,18 @@
         <h2>Restaurants in Kensington</h2>
       </div>
       <div class="row">
-        <div class="col-md-3 list-group" id="sidebar">
+        <div id="hamburger" data-bind="click: toggleMenu"><img src="img/burger.png" height="48px" width="48px"></div>
+        <div class="col-md-3 col-sm-4 list-group" id="sidebar">
           <input type="text" data-bind="textInput: searchName" placeholder="Filter Restaurants"></input>
           <ul data-bind="foreach: sortedlocations">
               <li data-bind="click: listClick, visible: filtered, text: name"></li>
           </ul>
         </div>
-        <div class="map-container col-md-9">
+        <div class="map-container col-md-9 col-sm-8">
           <div id="map"><!--Map Generated Here --></div>
         </div>
       </row>
     </div>
-
-
     <script type="text/javascript" async src="js/oauth-1.0a.js"></script>
     <script type="text/javascript" async src="js/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" async src="js/main.js"></script>
