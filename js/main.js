@@ -2,7 +2,6 @@
 var locations = [
 	{
 		name: 'Blue Nile Ethiopian Restaurant',
-		ID: '1',
 		phone: '(403) 270-4550',
 		address: '322 10 St NW',
 		city: 'Calgary, AB, T2N 1V8',
@@ -13,7 +12,6 @@ var locations = [
 	},
 	{
 		name: 'Delicious Thai Restaurant',
-		ID: '2',
 		phone: '(403) 450-1996',
 		address: '314 10 St NW',
 		city: 'Calgary, AB, T2N 1V8',
@@ -24,7 +22,6 @@ var locations = [
 	},
 	{
 		name: 'Bodega',
-		ID: '3',
 		phone: '(403) 475-9227',
 		address: '318A 10 St NW',
 		city: 'Calgary, AB, T2N 1V8',
@@ -35,7 +32,6 @@ var locations = [
 	},
 	{
 		name: 'Midtown Kitchen & Bar',
-		ID: '4',
 		phone: '(403) 474-2555',
 		address: '302 10 St NW',
 		city: 'Calgary, AB, T2N 1V8',
@@ -46,7 +42,6 @@ var locations = [
 	},
 	{
 		name: 'Shawarma Station',
-		ID: '5',
 		phone: '(403) 283-0606',
 		address: '106-227 10 St NW',
 		city: 'Calgary, AB, T2N 1V8',
@@ -110,12 +105,13 @@ function ViewModel() {
 				// Change filtered value to false when no match
 				sortedlocations()[i].filtered(false);
 				sortedlocations()[i].marker.setVisible(false);
+				infoWindow.close();
 			} else {
 				// Change filtered value to true with a match
 				sortedlocations()[i].filtered(true);
 				sortedlocations()[i].marker.setVisible(true);
-			};
-		};
+			}
+		}
 	});
 
 	// Handles bouncing animation on opening of infowindow
@@ -123,7 +119,7 @@ function ViewModel() {
 		location.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){
 			location.setAnimation(null);
-		}, 1500);
+		}, 1400);
 	};
 
 	// Click handler for sidebar list -- Treats click of list as a click of the marker
@@ -173,29 +169,28 @@ function ViewModel() {
 		var phone = location.phone;
 		parameters.phone = phone;
 
-
 		// Using format oauthSignature.generate(method, URL, parameters, CONSUMER_SECRET, TOKEN_SECRET)
 		var encodedSignature = oauthSignature.generate('GET', yelpURL, parameters, consumerSecret, tokenSecret);
 		parameters.oauth_signature = encodedSignature;
 
 		// AJAX request
-		$.ajax({
+		var request = $.ajax({
 			url: yelpURL,
 			data: parameters,
 			cache: true,
 			dataType: 'jsonp',
 			jsonpCallback: 'cb',
-			// Displays returned info from Yelp and locally stored info in infowindow
-			success: function(data) {
-				infoWindow.setContent('<div><a href="' + location.website + '"">' + location.name + '</a><br/>' + location.phone + '<br/>' + location.address + ', ' + location.city + '</div> <div><a href="' + data.businesses[0].url + '"><img src="' + data.businesses[0].rating_img_url + '"><img src="https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/5cb298e8a186/assets/img/yelp-logo-xsmall@2x.png"></a></div><div>' + data.businesses[0].snippet_text + '</div>');
-				infoWindow.open(map, location.marker);
-			},
-			// Informs user Yelp AJAX request failed; displays locally stored info only
-			error: function(data) {
-				infoWindow.setContent('<div><a href="' + location.website + '"">' + location.name + '</a><br/>' + location.phone + '<br/>' + location.address + ', ' + location.city + '</div><div>Yelp info could not be accessed at this time, please try again later</div>');
-				infoWindow.open(map, location.marker);
-			}
 		});
+
+		request.done(function(data) {
+				infoWindow.setContent('<div><a href="' + location.website + '" target="_blank">' + location.name + '</a><br/>' + location.phone + '<br/>' + location.address + ', ' + location.city + '</div> <div><a href="' + data.businesses[0].url + 'target="_blank""><img src="' + data.businesses[0].rating_img_url + '" alt="Yelp Rating"><img src="https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/5cb298e8a186/assets/img/yelp-logo-xsmall@2x.png" alt="Yelp!"></a></div><div>' + data.businesses[0].snippet_text + '</div>');
+				infoWindow.open(map, location.marker);
+			});
+
+		request.fail(function(data) {
+				infoWindow.setContent('<div><a href="' + location.website + '" target="_blank">' + location.name + '</a><br/>' + location.phone + '<br/>' + location.address + ', ' + location.city + '</div><div>Yelp info could not be accessed at this time, please try again later</div>');
+				infoWindow.open(map, location.marker);
+			});
 
 		return location.marker;
 	};
@@ -212,4 +207,6 @@ function mapError() {
 	- Update map zooming and center on infoWindow open/close
 	- Include additional types of filtering (dropdown menu for cuisine, etc)
 	- Animate menu when hamburger button pressed
+	- Implement OOP for restaurant locations for ease of adding more & better architecture overall
+	- Use KO with click & css bindings to toggle class to open/close hamburger menu
 */
