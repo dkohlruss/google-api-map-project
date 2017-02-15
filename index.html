@@ -1,95 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>David Kohlruss</title>
-    <script src="https://use.fontawesome.com/6a531f5c2a.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-    <div class="container-fluid fill-page">
-        <div id="side-nav" class="side-nav">
-            <a href="#project-section"><i class="fa fa-paperclip" aria-hidden="true" id="PROJECTS"></i></a> <!-- Projects -->
-            <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true" id="ABOUT"></i></a> <!-- About -->
-            <a href="#"><i class="fa fa-share" aria-hidden="true" id="CONTACT"></i></a> <!-- Contact -->
-            <div class="bottom-side-nav">
-                <a href="#"><i class="fa fa-linkedin" aria-hidden="true" id="LINKEDIN"></i></a> <!-- Linkedin -->
-                <a href="#"><i class="fa fa-github" aria-hidden="true" id="GITHUB"></i></a> <!-- Github -->
-                <a href="#"><i class="fa fa-twitter" aria-hidden="true" id="TWITTER"></i></a> <!-- Twitter -->
-                <a href="#"><i class="fa fa-envelope-o" aria-hidden="true" id="EMAIL"></i></a> <!-- Email -->
-            </div>
-        </div>
-        <div id="burger">
-            <button class="c-hamburger c-hamburger--htx">
-                <span>toggle menu</span>
-            </button>
-        </div>
-        <div class="row">
-            <div class="top-socials">
-                <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a> <!-- Linkedin -->
-                <a href="#"><i class="fa fa-github" aria-hidden="true"></i></a> <!-- Github -->
-                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a> <!-- Twitter -->
-                <a href="#"><i class="fa fa-envelope-o" aria-hidden="true"></i></a> <!-- Email -->
-            </div>
-        </div>
-        <div class="row fill-page">
-            <div class="title-page">
-                <div class="title-contents center-block">
-
-                    <h1 class="greeting">Howdy! </h1>
-                    <h2>I'm David.  I'm a front-end web developer.</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row" id="project-section">
-            <section class="nopadding project-page container">
-                <h2>MY STUFF</h2>
-                <div class="row high-row">
-                    <div class="col-md-4 col-sm-6">
-                        <img src="../img/map.gif" alt="Google API Maps">
-                    </div>
-                    <div class="col-md-8 col-sm-6">
-                        <h3>Restaurant Map</h3>
-                        <sup>KnockoutJS | Google Maps API | Yelp API</sup>
-                        <p>This app takes in a static list of objects and uses the KnockoutJS ViewModel to populate a google map with markers for each location which show an abridged Yelp listing.</p>
-                        <p><a href="https://github.com/dkohlruss/google-api-map-project" target="_blank">Git</a></p>
-                    </div>
-                </div>
-                <div class="row high-row">
-                    <div class="col-md-4 col-sm-6">
-                        <img src="../img/simon.png" alt="Simon Preview">
-                    </div>
-                    <div class="col-md-8 col-sm-6">
-                        <h3>Simon</h3>
-                        <sup>Javascript | CSS</sup>
-                        <p>Created for FreeCodeCamp, this is a clone of the classic game "Simon". Graphics made entirely with basic CSS shapes.</p>
-                        <p><a href="https://github.com/dkohlruss/simon" target="_blank">Git</a> || <a href="https://codepen.io/dkohlruss/full/XpYjyg" target="_blank">Live</a></p>
-                    </div>
-                </div>
-                <div class="row high-row">
-                    <div class="col-md-4 col-sm-6">
-                        <img src="../img/leaderboard.png" alt="Leaderboard Preview">
-                    </div>
-                    <div class="col-md-8 col-sm-6">
-                        <h3>Leaderboard</h3>
-                        <sup>React</sup>
-                        <p>Created for FreeCodeCamp, this basic React app received a remote file in JSON format, parses it, and sorts it to be displayed to the user.</p>
-                        <p><a href="https://github.com/dkohlruss/leaderboard" target="_blank">Git</a> || <a href="https://codepen.io/dkohlruss/full/Grzeae" target="_blank">Live</a></p>
-                    </div>
-                </div>
-                <div class="row high-row">
-                    <div class="col-md-4 col-sm-6">
-                        <img src="../img/pattern.png" alt="Udacity Arcade Game">
-                    </div>
-                    <div class="col-md-8 col-sm-6">
-                        <h3>Frogger Game Clone</h3>
-                        <sup>Javascript</sup>
-                        <p>This is a clone of the classic arcade game Frogger, created using a boilerplate as a part of the Udacity Front-End Nanodegree.</p>
-                        <p><a href="https://github.com/dkohlruss/udacity-arcade-game" target="_blank">Git</a></p>
-                    </div>
-                </div>
-            </section>
-        </div>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Google Maps API Project</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <header class="col-md-12">
+        <h1>Restaurants in Kensington</h1>
+        <h2>A list of my local eateries</h2>
+      </header>
+      <div class="row">
+        <nav id="hamburger" data-bind="click: toggleMenu"><img src="img/burger.png" height="48" width="48" alt="Hamburger Button"></nav>
+        <aside class="col-md-3 col-sm-4 list-group" id="sidebar">
+          <input type="text" data-bind="textInput: searchName" placeholder="Filter Restaurants">
+          <ul data-bind="foreach: sortedlocations">
+              <li data-bind="click: listClick, visible: filtered, text: name"></li>
+          </ul>
+        </aside>
+        <main class="map-container col-md-12">
+          <article id="map"><!--Map Generated Here --></article>
+        </main>
+      </div>
     </div>
-</head>
-<script src="js/index.js"></script>
+    <script src="js/knockout-3.3.0.js"></script>
+    <script src="js/oauth-1.0a.js"></script>
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7Q5FQh1EH6qDJ0a5FQUDj5pYMuhRJh7o&v=3&callback=initMap" onError="mapError()">
+    </script>
+  </body>
 </html>
